@@ -4,8 +4,8 @@ const cors = require('cors');
 const bodyParser = require('body-parser')
 var mysql = require('mysql2');
 var connection = mysql.createConnection({
-  host     : '127.0.0.1',
-  user     : 'root',
+  host     : 'whwg-db.cjolcvuz7adj.us-east-1.rds.amazonaws.com',
+  user     : 'admin',
   password : 'Cr1mscar!',
   database : 'whwg'
 })
