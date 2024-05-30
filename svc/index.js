@@ -3,7 +3,6 @@ const app = express();
 const cors = require('cors');
 const bodyParser = require('body-parser');
 const mysql = require('mysql2');
-const pm2 = require('pm2');
 
 // Database configuration
 const dbConfig = {
@@ -55,29 +54,16 @@ app.get('/scores', (req, res) => {
     });
 });
 
-// Start the server with PM2
-pm2.connect((err) => {
-    if (err) {
-        console.error('Error connecting to PM2:', err);
-        process.exit(1);
-    }
-
-    pm2.start({
-        script: 'node index.js',
-        name: 'whwg-server'
-    }, (err, apps) => {
-        if (err) {
-            console.error('Error starting application with PM2:', err);
-            process.exit(1);
-        }
-        console.log('Server started successfully with PM2');
-    });
-});
-
 // Keep the process alive
 setInterval(() => {
     console.log('Keeping process alive');
-}, 1000 * 60 * 60 * 24); // Repeat every 24 hours
+}, 1000 * 60 * 30); // Repeat every 30 minutes
+
+// Start the server
+const server = app.listen(8080, () => {
+    console.log('Server listening on port 8080');
+});
 
 // Export the app for testing purposes
 module.exports = app;
+
