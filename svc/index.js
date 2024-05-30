@@ -63,7 +63,7 @@ pm2.connect((err) => {
     }
 
     pm2.start({
-        script: 'npm start',
+        script: 'node index.js',
         name: 'whwg-server'
     }, (err, apps) => {
         if (err) {
