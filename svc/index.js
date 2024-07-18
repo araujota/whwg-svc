@@ -1,8 +1,16 @@
 const express = require('express');
+const fs = require('fs');
+const http = require('http');
+const https = require('https');
 const app = express();
 const cors = require('cors');
 const bodyParser = require('body-parser');
 const mysql = require('mysql2');
+
+const options = {
+    key: fs.readFileSync('/etc/letsencrypt/live/speedlesvc.com/privkey.pem'),
+    cert: fs.readFileSync('/etc/letsencrypt/live/speedlesvc.com/fullchain.pem')
+}
 
 // Database configuration
 const dbConfig = {
@@ -59,10 +67,18 @@ setInterval(() => {
     console.log('Keeping process alive');
 }, 1000 * 60 * 30); // Repeat every 30 minutes
 
-// Start the server
-const server = app.listen(8080, () => {
-    console.log('Server listening on port 8080');
-});
+// Create an HTTPS server
+https.createServer(options, app).listen(443, () => {
+    console.log('HTTPS Server running on port 443');
+  });
+
+// Create an HTTP server to redirect to HTTPS
+http.createServer((req, res) => {
+    res.writeHead(301, { "Location": "https://" + req.headers['host'] + req.url });
+    res.end();
+  }).listen(80, () => {
+    console.log('HTTP Server running on port 80');
+  });
 
 // Export the app for testing purposes
 module.exports = app;
